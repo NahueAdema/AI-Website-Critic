@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 AI Website Critic
 
-## Getting Started
+> Analizador inteligente de sitios web con feedback de UX/UI/SEO basado en IA.
 
-First, run the development server:
+## 🎯 ¿Qué hace?
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+El usuario ingresa una URL y la aplicación:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. 🔍 Extrae el contenido de la web
+2. 🧠 Lo analiza con IA (Gemini)
+3. 📊 Devuelve un score + feedback accionable
+4. ✨ Sugiere mejoras concretas en formato checklist
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧠 Arquitectura
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+src/
+├── app/ # Next.js App Router (Server Components por defecto)
+├── actions/ # Server Actions: lógica de mutación separada de la UI
+├── lib/ # Utilidades puras y configuraciones
+│ ├── ai/ # Cliente Gemin i+ prompts + schemas
+│ └── scraper/ # Fetch y limpieza de HTML
+├── components/ # Componentes React reutilizables
+│ ├── ui/ # Componentes base (Button, Card, etc.)
+│ └── analysis/ # Componentes específicos del dominio
+└── types/ # Tipos TypeScript compartidos
 
-## Learn More
+### Principios de diseño:
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ **TypeScript estricto**: tipos compartidos en `src/types/`
+- ✅ **Validación con Zod**: inputs y respuestas de IA siempre validados
+- ✅ **Server Actions**: lógica de backend en `src/actions/`, nunca en componentes
+- ✅ **IA en el servidor**: llamadas a OpenAI solo desde server-side (seguridad)
+- ✅ **Código auto-documentado**: comentarios en lógica compleja, nombres descriptivos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ▶️ Cómo correr localmente
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clonar el repo e instalar dependencias:
 
-## Deploy on Vercel
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Configurar variables de entorno:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   cp .env.example .env.local
+   # Editar .env.local y agregar tu GEMINI_API_KEY
+   ```
+
+3. Iniciar el servidor de desarrollo:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Abrir [http://localhost:3000](http://localhost:3000) 🎉
+
+## 🤝 Contribuir
+
+Este proyecto está diseñado con fines educativos. ¡Sentite libre de forkear y experimentar!
+
+---
+
+Hecho con ❤️
