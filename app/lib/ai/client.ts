@@ -1,15 +1,11 @@
 import { AIProvider } from "./types";
-import { GeminiProvider } from "./gemini-provider";
+// import { GeminiProvider } from './gemini-provider';
+import { GroqProvider } from "./groq-provider";
 
-/**
- * Factory que devuelve el proveedor configurado.
- * Permite cambiar de IA solo modificando variables de entorno.
- */
 export function getAIProvider(): AIProvider {
-  return new GeminiProvider();
+  return new GroqProvider();
 }
 
-// Singleton para reutilizar la instancia
 let providerInstance: AIProvider | null = null;
 
 export const aiClient = {

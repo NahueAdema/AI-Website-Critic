@@ -33,3 +33,11 @@ export interface AnalysisResult {
 export type AnalyzeWebsiteResult =
   | { success: true; data: AnalysisResult }
   | { success: false; error: string };
+
+/**
+ * Interfaz común para cualquier proveedor de IA.
+ * Permite cambiar de proveedor (Gemini/OpenAI) sin tocar la lógica de negocio.
+ */
+export interface AIProvider {
+  analyze(html: string, url: string): Promise<AnalysisResult>;
+}
