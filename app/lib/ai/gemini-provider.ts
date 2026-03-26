@@ -112,8 +112,10 @@ Esquema esperado:
         issues: validated.issues,
         quickWins: validated.quickWins,
       };
-    } catch (error: any) {
-      console.error("[GeminiProvider] Error:", error?.message || error);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error("[GeminiProvider] Error:", errorMessage);
       throw error;
     }
   }

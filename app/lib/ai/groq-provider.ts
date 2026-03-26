@@ -101,30 +101,34 @@ export class GroqProvider implements AIProvider {
         issues: validated.issues,
         quickWins: validated.quickWins,
       };
-    } catch (error: any) {
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      const status =
+        error && typeof error === "object" && "status" in error
+          ? (error as { status?: number | string }).status
+          : undefined;
+
       console.error("[GroqProvider] Error:", {
-        message: error?.message,
-        type: error?.name,
-        status: error?.status,
+        message: err.message,
+        type: err.name,
+        status,
       });
 
-      if (error?.status === 401) {
+      if (status === 401) {
         throw new Error(
           "API Key de Groq inválida. Verificá GROQ_API_KEY en .env.local",
         );
       }
-      if (error?.status === 429) {
+      if (status === 429) {
         throw new Error("Límite de requests de Groq. Esperá unos segundos.");
       }
-      if (error?.message?.includes("JSON")) {
+      if (err.message?.includes("JSON")) {
         throw new Error(
           "La IA respondió con formato inválido. Intentá de nuevo.",
         );
       }
 
-      throw new Error(
-        `Error en Groq: ${error?.message || "Error desconocido"}`,
-      );
+      throw new Error(`Error en Groq: ${err.message || "Error desconocido"}`);
     }
   }
 }

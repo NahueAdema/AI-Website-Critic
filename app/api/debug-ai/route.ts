@@ -18,11 +18,11 @@ export async function GET() {
       scores: result.scores,
       issuesCount: result.issues.length,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[Debug AI] Error:", error);
     return NextResponse.json(
       {
-        error: error?.message || "Error desconocido",
+        error: error instanceof Error ? error.message : "Error desconocido",
         hint: "Verificá: 1) API Key en .env.local, 2) Reiniciaste el servidor, 3) Tenés conexión a internet",
       },
       { status: 500 },

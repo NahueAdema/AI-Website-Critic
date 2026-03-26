@@ -19,13 +19,18 @@ export default function AnalyzePage() {
   useEffect(() => {
     const dataParam = searchParams.get("data");
     if (!dataParam) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setError("No hay datos de análisis.");
+      setResult(null);
       return;
     }
     try {
-      setResult(JSON.parse(decodeURIComponent(dataParam)));
+      const parsed = JSON.parse(decodeURIComponent(dataParam));
+      setResult(parsed);
+      setError(null);
     } catch {
       setError("No se pudieron cargar los resultados.");
+      setResult(null);
     }
   }, [searchParams]);
 
