@@ -7,7 +7,7 @@
 El usuario ingresa una URL y la aplicación:
 
 1. 🔍 Extrae el contenido de la web
-2. 🧠 Lo analiza con IA (Gemini)
+2. 🧠 Lo analiza con IA (Groq)
 3. 📊 Devuelve un score + feedback accionable
 4. ✨ Sugiere mejoras concretas en formato checklist
 
@@ -44,7 +44,7 @@ src/
 
    ```bash
    cp .env.example .env.local
-   # Editar .env.local y agregar tu GEMINI_API_KEY
+   # Editar .env.local y agregar tu GROQ_API_KEY
    ```
 
 3. Iniciar el servidor de desarrollo:

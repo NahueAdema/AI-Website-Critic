@@ -1,86 +1,73 @@
 "use client";
-
-import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { AnalysisIssue } from "../../types";
-import { cn } from "../../lib/utils";
 
 interface IssueListProps {
   issues: AnalysisIssue[];
 }
 
-/**
- * Lista de issues encontrados con prioridades y sugerencias.
- */
+const typeIcons: Record<string, string> = {
+  contrast: "◑",
+  seo: "⊕",
+  ux: "◎",
+  performance: "⚡",
+  content: "≡",
+  accessibility: "◻",
+};
+
 export function IssueList({ issues }: IssueListProps) {
   if (issues.length === 0) {
     return (
-      <Card className="text-center py-8">
-        <p className="text-gray-600 dark:text-gray-400">
-          🎉 ¡No se encontraron problemas! Tu sitio está en excelente estado.
+      <div className="border border-emerald-400/20 bg-emerald-400/3 rounded-2xl p-8 text-center">
+        <p className="text-emerald-400 font-mono text-sm tracking-wider">
+          Sin problemas detectados — sitio en excelente estado
         </p>
-      </Card>
+      </div>
     );
   }
 
-  // Ordenar por prioridad (high → medium → low)
   const priorityOrder = { high: 0, medium: 1, low: 2 };
-  const sortedIssues = [...issues].sort(
+  const sorted = [...issues].sort(
     (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
   );
 
-  const getIcon = (type: string) => {
-    const icons: Record<string, string> = {
-      contrast: "🎨",
-      seo: "🔍",
-      ux: "👆",
-      performance: "⚡",
-      content: "📝",
-      accessibility: "♿",
-    };
-    return icons[type] || "⚠️";
-  };
-
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-        Issues Encontrados ({issues.length})
-      </h2>
+    <div>
+      <div className="flex items-center gap-3 mb-5">
+        <span className="w-6 h-px bg-slate-700" />
+        <h2 className="font-mono text-xs tracking-[0.2em] text-slate-500 uppercase">
+          Issues encontrados ({issues.length})
+        </h2>
+      </div>
 
-      {sortedIssues.map((issue, index) => (
-        <Card key={index} className="p-4 hover:shadow-md transition-shadow">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">{getIcon(issue.type)}</span>
-
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="font-medium text-gray-900 dark:text-white">
-                  {issue.description}
-                </h3>
-                <Badge variant={issue.priority} />
+      <div className="space-y-2">
+        {sorted.map((issue, i) => (
+          <div
+            key={i}
+            className="group border border-white/6 bg-white/2 hover:bg-white/4 hover:border-white/1 rounded-xl p-5 transition-all"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 rounded-lg border border-white/8 bg-white/3 flex items-center justify-center text-slate-500 font-mono text-sm shrink-0 mt-0.5">
+                {typeIcons[issue.type] || "!"}
               </div>
-
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                {issue.suggestion}
-              </p>
-
-              <div className="flex items-center gap-2">
-                <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                  <p className="font-medium text-slate-200 text-sm">
+                    {issue.description}
+                  </p>
+                  <Badge variant={issue.priority} />
+                </div>
+                <p className="text-sm text-slate-500 leading-relaxed mb-3">
+                  {issue.suggestion}
+                </p>
+                <span className="font-mono text-[11px] text-slate-700 bg-white/3 border border-white/6 px-2 py-0.5 rounded-md tracking-wider">
                   {issue.type}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Prioridad:{" "}
-                  {issue.priority === "high"
-                    ? "Alta"
-                    : issue.priority === "medium"
-                      ? "Media"
-                      : "Baja"}
                 </span>
               </div>
             </div>
           </div>
-        </Card>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

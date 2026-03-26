@@ -1,6 +1,4 @@
-// components/ui/Button.tsx
 "use client";
-
 import { ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "../../lib/utils";
 
@@ -23,30 +21,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg";
+    const base =
+      "inline-flex items-center justify-center font-bold tracking-wide transition-all focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed rounded-xl";
 
     const variants = {
       primary:
-        "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600",
+        "bg-gradient-to-r from-emerald-400 to-cyan-400 text-[#080b0f] hover:opacity-90 active:scale-[.99]",
       secondary:
-        "bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700",
+        "bg-white/[0.05] text-white border border-white/10 hover:bg-white/[0.08]",
       outline:
-        "border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800",
-      ghost:
-        "text-gray-700 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800",
+        "border border-emerald-400/40 text-emerald-400 hover:bg-emerald-400/[0.06]",
+      ghost: "text-slate-400 hover:text-white hover:bg-white/[0.05]",
     };
 
     const sizes = {
-      sm: "px-3 py-1.5 text-sm",
-      md: "px-4 py-2 text-base",
-      lg: "px-6 py-3 text-lg",
+      sm: "px-4 py-2 text-sm",
+      md: "px-5 py-2.5 text-sm",
+      lg: "px-7 py-4 text-base",
     };
 
     return (
       <button
         ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        className={cn(base, variants[variant], sizes[size], className)}
         disabled={disabled || isLoading}
         {...props}
       >
@@ -76,5 +73,4 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
-
 Button.displayName = "Button";

@@ -1,32 +1,38 @@
 "use client";
 
-import { Card } from "../ui/Card";
-
 interface StrengthsListProps {
   strengths: string[];
 }
 
-/**
- * Lista de fortalezas encontradas en el sitio.
- */
 export function StrengthsList({ strengths }: StrengthsListProps) {
-  if (strengths.length === 0) {
-    return null;
-  }
+  if (strengths.length === 0) return null;
 
   return (
-    <Card className="p-6 bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800">
-      <h2 className="text-xl font-semibold text-green-900 dark:text-green-300 mb-4">
-        ✅ Fortalezas ({strengths.length})
-      </h2>
-      <ul className="space-y-2">
-        {strengths.map((strength, index) => (
-          <li key={index} className="flex items-start gap-2">
-            <span className="text-green-600 dark:text-green-400">✓</span>
-            <span className="text-gray-700 dark:text-gray-300">{strength}</span>
+    <div className="border border-emerald-400/15 bg-emerald-400/3 rounded-2xl p-6">
+      <div className="flex items-center gap-3 mb-5">
+        <span className="w-6 h-px bg-emerald-400/40" />
+        <h2 className="font-mono text-xs tracking-[0.2em] text-emerald-500 uppercase">
+          Fortalezas ({strengths.length})
+        </h2>
+      </div>
+      <ul className="space-y-3">
+        {strengths.map((s, i) => (
+          <li key={i} className="flex items-start gap-3">
+            <div className="w-5 h-5 rounded border border-emerald-400/30 bg-emerald-400/10 flex items-center justify-center shrink-0 mt-0.5">
+              <svg
+                className="w-3 h-3 text-emerald-400"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <polyline points="2,6 5,9 10,3" />
+              </svg>
+            </div>
+            <span className="text-sm text-slate-400 leading-relaxed">{s}</span>
           </li>
         ))}
       </ul>
-    </Card>
+    </div>
   );
 }

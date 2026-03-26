@@ -1,74 +1,80 @@
 "use client";
-
 import { useState } from "react";
-import { Card } from "../ui/Card";
 import { cn } from "../../lib/utils";
 
 interface QuickWinsProps {
   wins: string[];
 }
-/**
- * Lista de mejoras rápidas con checkboxes interactivos.
- */
+
 export function QuickWins({ wins }: QuickWinsProps) {
   const [checked, setChecked] = useState<Record<number, boolean>>({});
 
-  const toggleCheck = (index: number) => {
-    setChecked((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
+  if (wins.length === 0) return null;
 
-  const completedCount = Object.values(checked).filter(Boolean).length;
-  const progress = wins.length > 0 ? (completedCount / wins.length) * 100 : 0;
+  const toggle = (i: number) =>
+    setChecked((prev) => ({ ...prev, [i]: !prev[i] }));
 
-  if (wins.length === 0) {
-    return null;
-  }
+  const done = Object.values(checked).filter(Boolean).length;
+  const pct = Math.round((done / wins.length) * 100);
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-          🚀 Quick Wins ({completedCount}/{wins.length})
-        </h2>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {Math.round(progress)}% completado
+    <div className="border border-white/6 bg-white/2 rounded-2xl p-6">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-3">
+          <span className="w-6 h-px bg-slate-700" />
+          <h2 className="font-mono text-xs tracking-[0.2em] text-slate-500 uppercase">
+            Quick wins
+          </h2>
+        </div>
+        <span className="font-mono text-xs text-slate-600">
+          {done}/{wins.length} · {pct}%
         </span>
       </div>
 
-      {/* Barra de progreso */}
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
+      {/* Progress */}
+      <div className="h-0.5 bg-slate-800 rounded mb-6 mt-4">
         <div
-          className="bg-green-500 h-2 rounded-full transition-all"
-          style={{ width: `${progress}%` }}
+          className="h-full rounded bg-linear-to-r from-emerald-400 to-cyan-400 transition-all duration-500"
+          style={{ width: `${pct}%` }}
         />
       </div>
 
-      {/* Lista de quick wins */}
-      <ul className="space-y-3">
-        {wins.map((win, index) => (
+      <ul className="space-y-2">
+        {wins.map((win, i) => (
           <li
-            key={index}
+            key={i}
+            onClick={() => toggle(i)}
             className={cn(
-              "flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors",
-              checked[index]
-                ? "bg-green-50 dark:bg-green-900/20"
-                : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700",
+              "flex items-start gap-4 p-4 rounded-xl cursor-pointer border transition-all",
+              checked[i]
+                ? "border-emerald-400/20 bg-emerald-400/4"
+                : "border-white/4 bg-white/1 hover:border-white/8 hover:bg-white/3",
             )}
-            onClick={() => toggleCheck(index)}
           >
-            <input
-              type="checkbox"
-              checked={checked[index] || false}
-              onChange={() => toggleCheck(index)}
-              className="mt-1 h-4 w-4 text-green-600 rounded focus:ring-green-500"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <div
+              className={cn(
+                "w-5 h-5 rounded border shrink-0 mt-0.5 flex items-center justify-center transition-all",
+                checked[i]
+                  ? "bg-emerald-400 border-emerald-400"
+                  : "border-slate-700 bg-transparent",
+              )}
+            >
+              {checked[i] && (
+                <svg
+                  className="w-3 h-3 text-[#080b0f]"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <polyline points="2,6 5,9 10,3" />
+                </svg>
+              )}
+            </div>
             <span
               className={cn(
-                "text-sm",
-                checked[index]
-                  ? "text-green-800 dark:text-green-300 line-through"
-                  : "text-gray-700 dark:text-gray-300",
+                "text-sm leading-relaxed transition-all",
+                checked[i] ? "text-slate-600 line-through" : "text-slate-300",
               )}
             >
               {win}
@@ -76,6 +82,6 @@ export function QuickWins({ wins }: QuickWinsProps) {
           </li>
         ))}
       </ul>
-    </Card>
+    </div>
   );
 }

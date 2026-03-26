@@ -1,54 +1,50 @@
 "use client";
-
-import { Card } from "../ui/Card";
 import { cn } from "../../lib/utils";
 
 interface ScoreCardProps {
   label: string;
   score: number;
-  icon?: React.ReactNode;
 }
 
-/**
- * Muestra un score individual con barra de progreso.
- */
-export function ScoreCard({ label, score, icon }: ScoreCardProps) {
-  const getScoreColor = (score: number) => {
-    if (score >= 8) return "bg-green-500";
-    if (score >= 5) return "bg-yellow-500";
-    return "bg-red-500";
-  };
+export function ScoreCard({ label, score }: ScoreCardProps) {
+  const color =
+    score >= 8
+      ? "text-emerald-400"
+      : score >= 5
+        ? "text-amber-400"
+        : "text-red-400";
 
-  const getScoreLabel = (score: number) => {
-    if (score >= 8) return "Excelente";
-    if (score >= 5) return "Regular";
-    return "Necesita mejorar";
-  };
+  const barColor =
+    score >= 8
+      ? "from-emerald-400 to-cyan-400"
+      : score >= 5
+        ? "from-amber-400 to-orange-400"
+        : "from-red-400 to-rose-400";
+
+  const sublabel =
+    score >= 8 ? "Excelente" : score >= 5 ? "Regular" : "Crítico";
 
   return (
-    <Card className="flex flex-col items-center p-4">
-      {icon && <div className="mb-2 text-2xl">{icon}</div>}
-      <div className="text-3xl font-bold text-gray-900 dark:text-white">
-        {score}/10
-      </div>
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+    <div className="border border-white/6 bg-white/2 hover:bg-white/4 transition-colors rounded-2xl p-6">
+      <p className="font-mono text-[11px] text-slate-700 tracking-widest uppercase mb-4">
         {label}
+      </p>
+      <div
+        className={`text-5xl font-bold tracking-tight leading-none mb-1 ${color}`}
+      >
+        {score}
+        <span className="text-lg text-slate-700 font-normal">/10</span>
       </div>
-
-      {/* Barra de progreso */}
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+      <p className="text-xs text-slate-600 mb-4">{sublabel}</p>
+      <div className="h-0.5 bg-slate-800 rounded">
         <div
           className={cn(
-            "h-2 rounded-full transition-all",
-            getScoreColor(score),
+            "h-full rounded bg-linear-to-r transition-all duration-700",
+            barColor,
           )}
           style={{ width: `${score * 10}%` }}
         />
       </div>
-
-      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-        {getScoreLabel(score)}
-      </div>
-    </Card>
+    </div>
   );
 }

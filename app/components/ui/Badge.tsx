@@ -9,14 +9,13 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = "default", children, ...props }, ref) => {
     const variants = {
-      high: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-      medium:
-        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-      low: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-      default: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
+      high: "bg-red-500/10 text-red-400 border border-red-500/20",
+      medium: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+      low: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+      default: "bg-white/[0.04] text-slate-400 border border-white/[0.08]",
     };
 
-    const priorityLabels: Record<IssuePriority | "default", string> = {
+    const labels: Record<IssuePriority | "default", string> = {
       high: "Alta",
       medium: "Media",
       low: "Baja",
@@ -27,16 +26,15 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={cn(
-          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+          "inline-flex items-center px-2.5 py-0.5 rounded-full font-mono text-[11px] tracking-wider",
           variants[variant],
           className,
         )}
         {...props}
       >
-        {children || priorityLabels[variant]}
+        {children || labels[variant]}
       </span>
     );
   },
 );
-
 Badge.displayName = "Badge";

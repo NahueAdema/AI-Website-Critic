@@ -3,7 +3,6 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
-import { Card } from "../components/ui/Card";
 import { ScoreCard } from "../components/analysis/ScoreCard";
 import { IssueList } from "../components/analysis/IssueList";
 import { QuickWins } from "../components/analysis/QuickWins";
@@ -18,47 +17,44 @@ export default function AnalyzePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Intentar obtener datos de query params
     const dataParam = searchParams.get("data");
-
     if (!dataParam) {
-      setError("No hay datos de análisis. Volvé a la página principal.");
+      setError("No hay datos de análisis.");
       return;
     }
-
     try {
-      const parsed = JSON.parse(decodeURIComponent(dataParam));
-      setResult(parsed);
-      setError(null);
-    } catch (e) {
-      setError("No se pudieron cargar los resultados. Volvé a analizar.");
-      setResult(null);
+      setResult(JSON.parse(decodeURIComponent(dataParam)));
+    } catch {
+      setError("No se pudieron cargar los resultados.");
     }
   }, [searchParams]);
 
-  const handleBack = () => {
-    router.push("/");
-  };
-
-  const handleNewAnalysis = () => {
-    router.push("/");
-  };
-
   if (error || !result) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
-        <Card variant="elevated" className="max-w-md w-full text-center">
-          <div className="text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            Error al cargar resultados
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {error || "Los datos no están disponibles"}
+      <main className="relative min-h-screen bg-[#080b0f] flex items-center justify-center p-6">
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(0,255,170,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,170,0.04)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none" />
+        <div className="relative border border-white/8 bg-white/2 rounded-2xl p-10 max-w-md w-full text-center">
+          <div className="w-12 h-12 rounded-xl border border-red-500/20 bg-red-500/10 flex items-center justify-center mx-auto mb-6">
+            <svg
+              className="w-6 h-6 text-red-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <h2 className="text-lg font-bold text-white mb-2">Error al cargar</h2>
+          <p className="text-slate-500 text-sm mb-6">
+            {error || "Datos no disponibles"}
           </p>
-          <Button onClick={handleBack} variant="primary">
+          <Button onClick={() => router.push("/")} variant="primary">
             Volver al inicio
           </Button>
-        </Card>
+        </div>
       </main>
     );
   }
@@ -67,94 +63,135 @@ export default function AnalyzePage() {
     (result.scores.ux + result.scores.seo + result.scores.accessibility) / 3,
   );
 
+  const scoreColor =
+    averageScore >= 8
+      ? "text-emerald-400"
+      : averageScore >= 5
+        ? "text-amber-400"
+        : "text-red-400";
+
+  const scoreLabel =
+    averageScore >= 8
+      ? "Excelente"
+      : averageScore >= 5
+        ? "Buen inicio"
+        : "Necesita atención";
+
   return (
-    <main className="min-h-screen p-4 bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              📊 Resultados del Análisis
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              URL:{" "}
-              <span className="font-mono text-sm">{formatUrl(result.url)}</span>
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">
-              {new Date(result.timestamp).toLocaleString("es-AR")}
-            </p>
+    <main className="relative min-h-screen bg-[#080b0f] text-slate-200">
+      {/* Grid bg */}
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(0,255,170,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,170,0.04)_1px,transparent_1px)] bg-size-[60px_60px] pointer-events-none" />
+
+      {/* Sticky header */}
+      <header className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 border-b border-white/6 backdrop-blur-sm bg-[#080b0f]/80">
+        <div className="flex items-center gap-3">
+          <div className="w-7 h-7 bg-linear-to-br from-emerald-400 to-cyan-400 rounded-lg flex items-center justify-center">
+            <svg
+              className="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#080b0f"
+              strokeWidth="2.5"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={handleBack} variant="outline">
-              ← Volver
-            </Button>
-            <Button onClick={handleNewAnalysis} variant="primary">
-              🔄 Nuevo Análisis
-            </Button>
+          <span className="font-bold text-sm tracking-wide text-white">
+            Web<span className="text-emerald-400">Critic</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button onClick={() => router.push("/")} variant="outline" size="sm">
+            ← Volver
+          </Button>
+          <Button onClick={() => router.push("/")} variant="primary" size="sm">
+            Nuevo análisis
+          </Button>
+        </div>
+      </header>
+
+      <div className="relative max-w-5xl mx-auto px-6 py-16 space-y-8">
+        {/* Page title */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-6 h-px bg-emerald-400" />
+            <span className="font-mono text-xs tracking-[0.2em] text-emerald-400 uppercase">
+              Reporte de análisis
+            </span>
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-white mb-3">
+            Resultados
+          </h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="font-mono text-sm text-slate-500 bg-white/3 border border-white/6 px-3 py-1 rounded-lg">
+              {formatUrl(result.url)}
+            </span>
+            <span className="font-mono text-xs text-slate-700">
+              {new Date(result.timestamp).toLocaleString("es-AR")}
+            </span>
           </div>
         </div>
 
-        {/* Score General */}
-        <Card variant="elevated" className="mb-8 p-6">
-          <div className="text-center">
-            <div className="text-6xl font-bold mb-2">
-              <span
-                className={
-                  averageScore >= 8
-                    ? "text-green-600"
-                    : averageScore >= 5
-                      ? "text-yellow-600"
-                      : "text-red-600"
-                }
-              >
-                {averageScore}/10
-              </span>
+        {/* Score general hero */}
+        <div className="border border-white/6 bg-white/2 rounded-2xl p-8 flex items-center justify-between gap-8 flex-wrap">
+          <div>
+            <p className="font-mono text-xs text-slate-600 tracking-widest uppercase mb-3">
+              Score general
+            </p>
+            <div
+              className={`text-8xl font-bold tracking-tighter leading-none ${scoreColor}`}
+            >
+              {averageScore}
+              <span className="text-3xl text-slate-700 font-normal">/10</span>
             </div>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Score Promedio
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-              {averageScore >= 8
-                ? "¡Excelente trabajo!"
-                : averageScore >= 5
-                  ? "Buen inicio, hay margen de mejora"
-                  : "Necesita atención urgente"}
-            </p>
+            <p className="text-slate-500 mt-3 text-sm">{scoreLabel}</p>
           </div>
-        </Card>
+          <div className="flex-1 min-w-50 max-w-sm space-y-4">
+            {[
+              { label: "UX", val: result.scores.ux },
+              { label: "SEO", val: result.scores.seo },
+              { label: "Accesibilidad", val: result.scores.accessibility },
+            ].map((s) => (
+              <div key={s.label}>
+                <div className="flex justify-between font-mono text-xs text-slate-600 mb-1.5">
+                  <span>{s.label}</span>
+                  <span className="text-slate-400">{s.val}/10</span>
+                </div>
+                <div className="h-1 bg-slate-800 rounded">
+                  <div
+                    className="h-full rounded bg-linear-to-r from-emerald-400 to-cyan-400 transition-all duration-700"
+                    style={{ width: `${s.val * 10}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        {/* Scores por Categoría */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <ScoreCard label="UX" score={result.scores.ux} icon="👆" />
-          <ScoreCard label="SEO" score={result.scores.seo} icon="🔍" />
+        {/* Score cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ScoreCard label="UX" score={result.scores.ux} />
+          <ScoreCard label="SEO" score={result.scores.seo} />
           <ScoreCard
             label="Accesibilidad"
             score={result.scores.accessibility}
-            icon="♿"
           />
         </div>
 
-        {/* Fortalezas */}
+        {/* Strengths */}
         {result.strengths.length > 0 && (
-          <div className="mb-8">
-            <StrengthsList strengths={result.strengths} />
-          </div>
+          <StrengthsList strengths={result.strengths} />
         )}
 
         {/* Issues */}
-        <div className="mb-8">
-          <IssueList issues={result.issues} />
-        </div>
+        <IssueList issues={result.issues} />
 
-        {/* Quick Wins */}
-        <div className="mb-8">
-          <QuickWins wins={result.quickWins} />
-        </div>
+        {/* Quick wins */}
+        <QuickWins wins={result.quickWins} />
 
-        {/* Footer */}
-        <footer className="text-center py-8 text-sm text-gray-500 dark:text-gray-400">
-          <p>¿Te fue útil este análisis? ¡Compartilo con tu equipo!</p>
-          <p className="mt-2">Hecho con ❤️</p>
+        <footer className="text-center pt-8 border-t border-white/6 font-mono text-xs text-slate-800 tracking-widest">
+          WebCritic · Powered by Groq + Next.js
         </footer>
       </div>
     </main>

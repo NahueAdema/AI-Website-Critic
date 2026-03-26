@@ -19,12 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body
-        className={` ${inter.className}bg-gray-50 dark:bg-gray-900 transition-colors`}
-      >
+      <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Header />
-          {children}
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+            <Header />
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
